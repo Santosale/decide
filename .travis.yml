@@ -9,3 +9,15 @@ install:
 - pip install -r ../requirements.txt
 script: 
 - python manage.py test
+services:
+  - postgresql
+addons:
+  postgresql: "9.6"
+global:
+  - PGPORT=5432
+
+before_script:
+ - cp local_settings.travis.py local_settings.py
+ - psql -c "create user decide with password 'decide'" 
+ - psql -c "create database decide owner decide"
+ - python manage.py migrate
